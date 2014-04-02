@@ -20,6 +20,7 @@ Or install it yourself as:
 ### Rhcf::Utils::DownloadCache
 
 ```ruby
+require 'rhcf/utils/download_cache'
 cache =  Rhcf::Utils::DownloadCache.new('a_cache_id', ttl=30)
 cache.get("http://example.com/a_image.png") # -> "/tmp/.../a_image.png"
 ```
