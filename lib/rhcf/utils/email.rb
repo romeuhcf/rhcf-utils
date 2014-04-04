@@ -1,3 +1,29 @@
+require 'resolv'
+require 'stringio'
+require 'net/smtp'
+module Net
+  class SMTP
+    def socket
+      @socket
+    end
+
+    def bind_at(ip)
+      @bind_at = ip
+    end
+
+    def tcp_socket(address, port)
+      in_addr = Socket.pack_sockaddr_in(0, @bind_at) if @bind_at
+
+      out_addr = Socket.pack_sockaddr_in(port, address)
+      s = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
+      s.bind(in_addr) if @bind_at
+      s.connect(out_addr)
+      s
+    end
+  end
+end
+
+
 module Rhcf
   module Utils
     module Email
