@@ -30,12 +30,12 @@ describe Rhcf::Utils::DownloadCache do
 
   describe "#hit?" do
     before(:each) do
-      FileUtils.rm_rf "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/aea455b4b37a2d4240a6b054ca0b0d5f8"
-      FileUtils.mkdir_p "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e7fb5389b6646ebb89aaa5502b75a440"
-      FileUtils.touch "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg"
+      FileUtils.rm_rf "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/a/e/a/aea455b4b37a2d4240a6b054ca0b0d5f8"
+      FileUtils.mkdir_p "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440"
+      FileUtils.touch "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg"
     end
     it "should return true if file downloaded and ttl is null" do
-      cache_of_30s.filename_for(img_url).should == '/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg'
+      cache_of_30s.filename_for(img_url).should == '/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg'
       cache_of_30s.hit?(img_url).should be_true
     end 
     it "should return true if file downloaded and newer then ttl" do
@@ -47,7 +47,7 @@ describe Rhcf::Utils::DownloadCache do
       end
     end 
     it "should return false if doesn't exist" do
-      FileUtils.rm "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg"
+      FileUtils.rm "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg"
       cache_of_30s.hit?(img_url).should be_false
     end 
 
@@ -56,7 +56,7 @@ describe Rhcf::Utils::DownloadCache do
 
   describe "#filename_for" do
     it "should return a path with cache id , file name hash and file hash component" do
-      subject.filename_for(img_url).should == '/tmp/Rhcf::Utils::DownloadCache/default/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg'
+      subject.filename_for(img_url).should == '/tmp/Rhcf::Utils::DownloadCache/default/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg'
     end
   end
 
@@ -77,8 +77,8 @@ describe Rhcf::Utils::DownloadCache do
   end
 
   describe "#get" do
-    let(:expected_path){ '/tmp/Rhcf::Utils::DownloadCache/default/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg' }
-    let(:expected_30s_path){ '/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg' }
+    let(:expected_path){ '/tmp/Rhcf::Utils::DownloadCache/default/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg' }
+    let(:expected_30s_path){ '/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg' }
     before(:each) do
       File.unlink(expected_path) rescue nil
     end

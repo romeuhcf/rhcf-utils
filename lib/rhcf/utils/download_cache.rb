@@ -18,18 +18,13 @@ module Rhcf
         outfile = filename_for(url)
         return outfile if self.class.hit_fname?(outfile, @ttl) # here goes the cache
         download!(url, outfile)
-      rescue 
-        if File.exist?(outfile)
-          File.unlink(outfile) 
-        end
-        raise
       end
  
 
       def download!(url, outfile)
-        mkdir_p(File.dirname(outfile))
-        File.open(outfile, 'wb') do |fd|
-          open(url, "rb") do |down|
+        open(url, "rb") do |down|
+          mkdir_p(File.dirname(outfile))
+          File.open(outfile, 'wb') do |fd|
             fd.write(down.read)
           end
         end
@@ -58,7 +53,11 @@ module Rhcf
         hash =  Digest::MD5.hexdigest(url)
         uri = URI(url)
         basename = File.basename(uri.path)
-        File.join(@root_path, @cache_id, hash, basename) 
+        File.join(@root_path, @cache_id, hash_tree(hash), basename) 
+      end
+
+      def hash_tree(hash)
+        [*(hash[0,3].split('')) ,hash].join('/')
       end
 
     end
