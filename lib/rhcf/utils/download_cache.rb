@@ -19,15 +19,17 @@ module Rhcf
         return outfile if self.class.hit_fname?(outfile, @ttl) # here goes the cache
         download!(url, outfile)
       rescue 
-        File.unkink(outfile) if File.exist?(outfile)
+        if File.exist?(outfile)
+          File.unlink(outfile) 
+        end
         raise
       end
  
 
       def download!(url, outfile)
         mkdir_p(File.dirname(outfile))
-        File.open(outfile, 'w') do |fd|
-          open(url, "r") do |down|
+        File.open(outfile, 'wb') do |fd|
+          open(url, "rb") do |down|
             fd.write(down.read)
           end
         end
