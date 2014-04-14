@@ -1,5 +1,5 @@
 require 'uri'
-require 'open-uri'
+require 'net/http'
 require 'fileutils'
 require 'digest/md5'
 
@@ -22,12 +22,22 @@ module Rhcf
  
 
       def download!(url, outfile)
-        open(url, "rb") do |down|
+        uri = URI(url)
+        expected_file_size = nil
+        Net::HTTP.start(uri.host) do |http|
+          resp = http.get(uri.path)
+
+          expected_file_size = resp.body.size
           mkdir_p(File.dirname(outfile))
           File.open(outfile, 'wb') do |fd|
-            fd.write(down.read)
+            fd.write(resp.body)
           end
         end
+
+        if expected_file_size != File.size(outfile)
+          raise "Different file size expected: '%d' bytes got: '%d' bytes " % [expected_file_size, File.size(outfile)]
+        end
+        raise "Empty file" if File.zero?(outfile)
         outfile
       end 
 
@@ -38,7 +48,7 @@ module Rhcf
   
       def self.hit_fname?(fname, ttl)
         
-        if File.exist?(fname) 
+        if File.exist?(fname) and !File.zero?(fname)
           if ttl
             File::Stat.new(fname).ctime > Time.now - ttl
           else 

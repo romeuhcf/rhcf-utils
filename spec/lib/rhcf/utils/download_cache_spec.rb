@@ -32,7 +32,7 @@ describe Rhcf::Utils::DownloadCache do
     before(:each) do
       FileUtils.rm_rf "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/a/e/a/aea455b4b37a2d4240a6b054ca0b0d5f8"
       FileUtils.mkdir_p "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440"
-      FileUtils.touch "/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg"
+      IO.write("/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg", 'noempty')
     end
     it "should return true if file downloaded and ttl is null" do
       cache_of_30s.filename_for(img_url).should == '/tmp/Rhcf::Utils::DownloadCache/cache_of_30s/e/7/f/e7fb5389b6646ebb89aaa5502b75a440/imagens-do-dia-20131023-04-original.jpg'
