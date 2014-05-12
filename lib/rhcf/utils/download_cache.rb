@@ -6,6 +6,8 @@ require 'digest/md5'
 module Rhcf
   module Utils
     class DownloadCache
+      class DownloadError < ArgumentError; end
+
       include FileUtils
       def initialize(cache_id= 'default', ttl = nil, root_path = nil)
         @cache_id = cache_id
@@ -25,7 +27,8 @@ module Rhcf
         uri = URI(url)
         expected_file_size = nil
         Net::HTTP.start(uri.host) do |http|
-          resp = http.get(uri.path)
+         resp = http.get(uri.path)
+         fail(DownloadError, resp.code) if resp.code != '200'
 
           expected_file_size = resp.body.size
           mkdir_p(File.dirname(outfile))

@@ -128,6 +128,9 @@ describe Rhcf::Utils::DownloadCache do
     it "should raise when download problem" do
       expect{ cache_of_30s.get("hftp://3423c434v234xd")}.to raise_error
     end
+    it "should raise when not found 404" do
+      expect{ cache_of_30s.get("http://www.uol.com.br/aaa3423c434v234xd.png")}.to raise_error(Rhcf::Utils::DownloadCache::DownloadError)
+    end
   
     describe "when ttl is null" do
       it "should cache forever if ttl is null" do
