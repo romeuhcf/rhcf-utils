@@ -1,5 +1,6 @@
 require 'resolv'
 require 'stringio'
+require 'socket'
 require 'net/smtp'
 module Net
   class SMTP
@@ -33,7 +34,7 @@ module Rhcf
         end
       end
 
-      def self.transmit(from, to, body, bind_interface=nil, ehlo = 'localhost.localdomain')
+      def self.transmit(from, to, body, bind_interface=nil, ehlo = Socket.gethostname)
         domain = to.split('@').last
 
         chat = StringIO.new
