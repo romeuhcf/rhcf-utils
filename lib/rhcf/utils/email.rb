@@ -35,18 +35,32 @@ module Rhcf
       end
 
       def self.transmit(from, to, body, bind_interface=nil, ehlo = Socket.gethostname)
+        
         domain = to.split('@').last
 
         chat = StringIO.new
-        mx = get_mxs(domain).sample
-        smtp = Net::SMTP.new(mx, 25)
-        smtp.bind_at bind_interface if bind_interface
-        result = smtp.start(ehlo) do |smtp|
-          smtp.socket.debug_output = chat
-          smtp.send_message body, from, to
+        mxs = get_mxs(domain).shuffle
+        
+        begin
+        
+          mx = mxs.shift
+          smtp = Net::SMTP.new(mx, 25)
+          smtp.bind_at bind_interface if bind_interface
+          result = smtp.start(ehlo) do |smtp|
+            smtp.socket.debug_output = chat
+            smtp.send_message body, from, to
+          end
+
+          return {status: result.status, string: result.string.to_s.strip, chat: chat.string.to_s.strip}
+          
+        rescue Errno::ECONNREFUSED => e
+          if mxs.empty?
+            raise
+          else
+            retry
+          end
         end
 
-        {status: result.status, string: result.string, chat: chat.string}
       end
     end
   end
