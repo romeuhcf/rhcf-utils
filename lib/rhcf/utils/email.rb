@@ -35,14 +35,14 @@ module Rhcf
       end
 
       def self.transmit(from, to, body, bind_interface=nil, ehlo = Socket.gethostname)
-        
+
         domain = to.split('@').last
 
         chat = StringIO.new
         mxs = get_mxs(domain).shuffle
-        
+
         begin
-        
+
           mx = mxs.shift
           smtp = Net::SMTP.new(mx, 25)
           smtp.bind_at bind_interface if bind_interface
@@ -52,8 +52,8 @@ module Rhcf
           end
 
           return {status: result.status, string: result.string.to_s.strip, chat: chat.string.to_s.strip}
-          
-        rescue Errno::ECONNREFUSED => e
+
+        rescue Errno::ECONNREFUSED, Timeout::Error => e
           if mxs.empty?
             raise
           else
